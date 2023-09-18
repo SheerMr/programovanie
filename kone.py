@@ -9,7 +9,9 @@ def solve(path=[random.randint(0, N-1), random.randint(0, N-1)]):
     for x in find_moves(path[-1][0], path[-1][0], path):
         moves.append(x, find_moves(x[0], x[1], path+[(x[0], x[1])]))
     # TODO usortovat, move na najmensiu, a potom daco ig
-    moves.sorted 
+    moves = sorted(moves, key=lambda x: len(x[0]))
+    for move in moves:
+        solve()
 
 def find_moves(x, y, path):
     global N
