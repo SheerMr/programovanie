@@ -1,10 +1,14 @@
 import random
 
 N = int(input())
+res = []
 
 
 def solve(path=[random.randint(0, N-1), random.randint(0, N-1)]):
-    global N
+    global N, res
+    if len(path) == N**2:
+        res.append(path)
+        return
     moves = []
     for x in find_moves(path[-1][0], path[-1][0], path):
         moves.append(x, find_moves(x[0], x[1], path+[(x[0], x[1])]))
