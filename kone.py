@@ -10,8 +10,7 @@ def solve(path=[(0, 0)]):
         res.append(path)
         return
     moves = []
-    print(len(path))
-    for x in find_moves(path[-1][0], path[-1][0], path):
+    for x in find_moves(path[-1][0], path[-1][1], path):
         moves.append((find_moves(x[0], x[1], path+[(x[0], x[1])]), path+[(x[0], x[1])]))
     moves = sorted(moves, key=lambda x: len(x[0]))
     for move in moves:
