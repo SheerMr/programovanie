@@ -1,12 +1,11 @@
-import tkinter
-from time import sleep
+import tkinter, time
 from arrow import draw_arrow
 from math import atan2, sin, cos
 
 
 class Chessboard:
 
-    TRAVELTIME = 10
+    TRAVELTIME = 1
     DIST = 5 # arbitrary units
     FREQ = 50
 
@@ -15,12 +14,16 @@ class Chessboard:
         self.canvas = tkinter.Canvas(width = 666, height = 666)
         self.TILESIZE = 666/n
         self.canvas.pack()
+        self.marked = []
+        self.marked_objects = []
         for x in range(n):
             for y in range(n):
                 if (x+y) % 2 == 1:
-                    self.canvas.create_rectangle(x*self.TILESIZE, y * self.TILESIZE, (x+1) * self.TILESIZE, (y+1)*self.TILESIZE, fill='white')
+                    self.canvas.create_rectangle(x*self.TILESIZE, y * self.TILESIZE, (x+1) * self.TILESIZE,
+                                                  (y+1)*self.TILESIZE, fill='white')
                 else:
-                    self.canvas.create_rectangle(x*self.TILESIZE, y * self.TILESIZE, (x+1) * self.TILESIZE, (y+1)*self.TILESIZE, fill='#99ff73')
+                    self.canvas.create_rectangle(x*self.TILESIZE, y * self.TILESIZE, (x+1) * self.TILESIZE,
+                                                  (y+1)*self.TILESIZE, fill='green')
         
 
     def move_piece(self, piece, x , y):
@@ -40,13 +43,38 @@ class Chessboard:
             if rect and arrow:
                 piece.pointer.append(self.canvas.create_polygon(*rect))
                 piece.pointer.append(self.canvas.create_polygon(*arrow))
-            board.canvas.update()
+            self.canvas.update()
             while piece.pointer:
                 self.canvas.delete(piece.pointer.pop())
-            sleep(1/Chessboard.FREQ)
+            time.sleep(1/Chessboard.FREQ)
         piece.x = x
         piece.y = y
-            
+
+    def mark_square(self, x, y):
+        if (x, y) in self.marked:
+            return False
+        self.marked.append((x, y))
+        left = None
+        right = None
+        iters = Chessboard.TRAVELTIME*Chessboard.FREQ//2
+        for i in range(iters):
+            time.sleep(0.5/Chessboard.FREQ)
+            if left and right:
+                self.canvas.delete(left)
+                self.canvas.delete(right)
+            left = self.canvas.create_line(x*self.TILESIZE, y*self.TILESIZE,
+                                            (x+(i+1)/iters)*self.TILESIZE, (y+(i+1)/iters)*self.TILESIZE, width=5)
+            right = self.canvas.create_line(x*self.TILESIZE, (y+1)*self.TILESIZE,
+                                                (x+(i+1)/iters)*self.TILESIZE, (y+1-(i+1)/iters)*self.TILESIZE, width=5)
+            self.canvas.update()
+        self.marked_objects.append(left)
+        self.marked_objects.append(right)
+
+
+    def delete_marks(self):
+        self.marked = []
+        for x in self.marked:
+            self.canvas.delete(x)
 
     def mainloop(self):
         self.canvas.mainloop()

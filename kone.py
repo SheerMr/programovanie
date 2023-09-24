@@ -1,4 +1,6 @@
-import random
+from board import Chessboard, Piece
+import multiprocessing
+
 
 N = int(input())
 res = []
@@ -16,6 +18,7 @@ def solve(path=[(0, 0)]):
     for move in moves:
         solve(move[1])
 
+
 def find_moves(x, y, path):
     global N
     out = []
@@ -32,5 +35,35 @@ def is_legal(x, y, path):
         return True
     return False
 
+
+def prev(stuff):
+    global curren, drawing
+    current -=1
+    drawing.terminate()
+    show_solution()
+
+
+def next(stuff):
+    global current, drawing
+    current += 1
+    drawing.terminate()
+    show_solution()
+
+
+def show_solution():
+    global current, board, knight, thread
+    board.delete_marks()
+    board.tp_piece(knight, res[current][0][0], res[current][0][1])
+    for move in res[current]:
+        board.move_piece(knight, move[0], move[1])
+        board.mark_square(move[0], move[1])
+
+
+current = 0
 solve()
-print(res)
+board = Chessboard(N)
+knight = Piece(0, 0, board)
+board.canvas.bind_all('d', next)
+board.canvas.bind_all('a', prev)
+show_solution()
+board.mainloop()
