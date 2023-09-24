@@ -39,14 +39,12 @@ def is_legal(x, y, path):
 def prev(stuff):
     global curren, drawing
     current -=1
-    drawing.terminate()
     show_solution()
 
 
 def next(stuff):
     global current, drawing
     current += 1
-    drawing.terminate()
     show_solution()
 
 
