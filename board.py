@@ -7,7 +7,7 @@ class Chessboard:
 
     TRAVELTIME = 1
     DIST = 5 # arbitrary units
-    FREQ = 50
+    FREQ = 80
 
     def __init__(self, n) -> None:
         self.N = n
@@ -63,18 +63,19 @@ class Chessboard:
                 self.canvas.delete(left)
                 self.canvas.delete(right)
             left = self.canvas.create_line(x*self.TILESIZE, y*self.TILESIZE,
-                                            (x+(i+1)/iters)*self.TILESIZE, (y+(i+1)/iters)*self.TILESIZE, width=5)
+                                            (x+(i+1)/iters)*self.TILESIZE, (y+(i+1)/iters)*self.TILESIZE, width=5, tags='mark')
             right = self.canvas.create_line(x*self.TILESIZE, (y+1)*self.TILESIZE,
-                                                (x+(i+1)/iters)*self.TILESIZE, (y+1-(i+1)/iters)*self.TILESIZE, width=5)
+                                                (x+(i+1)/iters)*self.TILESIZE, (y+1-(i+1)/iters)*self.TILESIZE, width=5, tags='mark')
             self.canvas.update()
         self.marked_objects.append(left)
         self.marked_objects.append(right)
 
 
     def delete_marks(self):
+        for x in self.marked_objects:
+            self.canvas.delete('mark')
+        self.marked_objects = []
         self.marked = []
-        for x in self.marked:
-            self.canvas.delete(x)
 
     def mainloop(self):
         self.canvas.mainloop()

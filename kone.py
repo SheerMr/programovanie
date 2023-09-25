@@ -1,5 +1,4 @@
 from board import Chessboard, Piece
-import multiprocessing
 
 
 N = int(input())
@@ -48,6 +47,10 @@ def next(stuff):
     show_solution()
 
 
+def delete(stuff):
+    board.delete_marks()
+
+
 def show_solution():
     global current, board, knight, thread
     board.delete_marks()
@@ -63,5 +66,6 @@ board = Chessboard(N)
 knight = Piece(0, 0, board)
 board.canvas.bind_all('d', next)
 board.canvas.bind_all('a', prev)
+board.canvas.bind_all('x', delete)
 show_solution()
 board.mainloop()
